@@ -52,7 +52,7 @@ resources:
     branch: main
     private_key: ((ci.ballot/Notes/deploy_key))
     uri: https://github.com/oozie/ballot.git
-    ignore_paths: [ terraform ]
+    ignore_paths: [ terraform, ci ]
 
 - name: tf-repo
   type: git
