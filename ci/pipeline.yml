@@ -1,0 +1,116 @@
+aws_params: &aws_params
+  AWS_ACCESS_KEY_ID: ((ci.ballot/Notes/aws_access))
+  AWS_SECRET_ACCESS_KEY: ((ci.ballot/Notes/aws_secret))
+  AWS_DEFAULT_REGION: us-west-2
+  AWS_SECURITY_GROUP:
+
+resource_types:
+- name: terraform
+  type: docker-image
+  source:
+    repository: ljfranklin/terraform-resource
+    tag: 1.0.6
+
+resources:
+- name: ci-repo
+  type: git
+  source:
+    branch: master
+    private_key: ((ci.ballot/Notes/deploy_key))
+    uri: git@gitlab.com:oozie/ci-repo.git
+
+- name: terraform
+  type: terraform
+  source:
+    env_name: ballot
+    backend_type: s3
+    backend_config:
+      bucket: trullla-infra
+      key: terraform.tfstate
+      region: ((ci.ballot/Notes/aws_region))
+      access_key: ((ci.ballot/Notes/aws_access))
+      secret_key: ((ci.ballot/Notes/aws_secret))
+    vars: {}
+    env:
+      <<: *aws_params
+
+- name: ballot-zipball
+  type: s3
+  source:
+    access_key_id: ((ci.ballot/Notes/aws_access))
+    secret_access_key: ((ci.ballot/Notes/aws_secret))
+    bucket: trullla-artifacts
+    initial_path: ballot/ballot-1234567890-aaaaaaa-both.zip
+    regexp: ballot/ballot-(.*).zip
+    region_name: ((ci.ballot/Notes/aws_region))
+
+# TODO: access via ssh
+- name: code-repo
+  type: git
+  source:
+    branch: main
+    private_key: ((ci.ballot/Notes/deploy_key))
+    uri: https://github.com/oozie/ballot.git
+    ignore_paths: [ terraform ]
+
+- name: tf-repo
+  type: git
+  source:
+    branch: main
+    uri: https://github.com/oozie/ballot.git
+    paths: [ terraform ]
+
+jobs:
+- name: build
+  plan:
+  - get: ci-repo
+  - get: code-repo
+    trigger: true
+  - task: build-react
+    file: ci-repo/tasks/build.yml
+  - task: zipball
+    file: ci-repo/tasks/zipball.yml
+    params:
+      PACKAGE: ballot
+  - put: ballot-zipball
+    params:
+      file: zipball/*.zip
+
+- name: s3-deploy
+  plan:
+  - get: ci-repo
+  - get: ballot-zipball
+    passed: [ build ]
+    trigger: true
+  - task: s3-deploy
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: xueshanf/awscli
+      inputs:
+        - name: ballot-zipball
+      params:
+        <<: *aws_params
+      run:
+        path: /bin/bash
+        args:
+        - -c
+        - |
+          mkdir out
+          cd out
+          unzip ../ballot-zipball/*.zip
+          aws s3 cp . s3://ballot.trullla.com --recursive
+
+
+
+- name: terraform
+  plan:
+    - get: tf-repo
+      trigger: true
+    - put: terraform
+      params:
+        terraform_source: tf-repo/terraform
+
+
