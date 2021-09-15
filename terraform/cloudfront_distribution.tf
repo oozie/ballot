@@ -20,7 +20,7 @@ resource "aws_cloudfront_distribution" "cdn" {
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD", "OPTIONS"]
     cached_methods   = ["GET", "HEAD"]
-    target_origin_id = var.domain
+    target_origin_id = aws_s3_bucket.ballot2.id
 
     forwarded_values {
       query_string = true
