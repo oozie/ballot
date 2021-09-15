@@ -30,7 +30,8 @@ resources:
       region: ((ci.ballot/Notes/aws_region))
       access_key: ((ci.ballot/Notes/aws_access))
       secret_key: ((ci.ballot/Notes/aws_secret))
-    vars: {}
+    vars:
+      domain: ballot.trullla.com
     env:
       <<: *aws_params
 
