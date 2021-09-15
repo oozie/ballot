@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "ballot" {
-  bucket = "ballot.trullla.com"
+  bucket = var.domain
 
   tags = {
     Environment = "PROD"
@@ -27,7 +27,7 @@ resource "aws_s3_bucket" "ballot" {
 }
 
 resource "aws_s3_bucket_policy" "public-by-default" {
-  bucket = "${aws_s3_bucket.ballot.id}"
+  bucket = aws_s3_bucket.ballot.id
 
   policy = <<POLICY
 {
@@ -40,7 +40,7 @@ resource "aws_s3_bucket_policy" "public-by-default" {
                 "AWS": "*"
             },
             "Action": "s3:GetObject",
-            "Resource": "arn:aws:s3:::ballot.trullla.com/*"
+            "Resource": "arn:aws:s3:::${var.domain}/*"
         }
     ]
 }
