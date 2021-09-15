@@ -1,6 +1,6 @@
 resource "aws_cloudfront_distribution" "cdn" {
   origin {
-    origin_id = var.domain
+    origin_id = aws_s3_bucket.ballot.id
     domain_name = aws_s3_bucket.ballot.website_endpoint
     custom_origin_config {
       http_port              = "80"
