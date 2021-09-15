@@ -1,7 +1,7 @@
 resource "aws_cloudfront_distribution" "cdn" {
   origin {
     origin_id = var.domain
-    domain_name = aws_s3_bucket.ballot.website_domain
+    domain_name = aws_s3_bucket.ballot.website_endpoint
   }
 
   # If using route53 aliases for DNS we need to declare it here too, otherwise we'll get 403s.
