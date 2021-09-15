@@ -1,10 +1,10 @@
 provider "aws" {
   profile    = "ballot"
-  region     = "us-east-1"
+  region     = "us-west-2"
 }
 
 provider "aws" {
   alias = "ballot-old"
-  region     = "us-west-2"
+  region     = "us-east-1"
 }
 
