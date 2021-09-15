@@ -107,6 +107,7 @@ jobs:
 
 
 - name: terraform
+  serial_groups: [ terraform ]
   plan:
     - get: tf-repo
       trigger: true
