@@ -4,7 +4,7 @@ provider "aws" {
 }
 
 provider "aws" {
-  profile    = "ballot-old"
+  alias = "ballot-old"
   region     = "us-west-2"
 }
 
