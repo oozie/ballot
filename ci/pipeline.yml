@@ -102,7 +102,7 @@ jobs:
           mkdir out
           cd out
           unzip ../ballot-zipball/*.zip
-          aws s3 cp . s3://ballot.trullla.com --recursive
+          aws s3 cp . s3://ballot.trullla.com2 --recursive
 
 
 

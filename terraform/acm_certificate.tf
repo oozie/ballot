@@ -6,9 +6,3 @@ resource "aws_acm_certificate" "cert" {
     create_before_destroy = true
   }
 }
-
-resource "aws_acm_certificate_validation" "validation" {
-  certificate_arn         = aws_acm_certificate.cert.arn
-  validation_record_fqdns = [aws_route53_record.domain.name]
-}
-
