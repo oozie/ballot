@@ -1,4 +1,4 @@
-resource "aws_s3_bucket" "ballot" {
+resource "aws_s3_bucket" "ballot2" {
   bucket = "${var.domain}2"
 
   tags = {
@@ -27,7 +27,7 @@ resource "aws_s3_bucket" "ballot" {
 }
 
 resource "aws_s3_bucket_policy" "public-by-default" {
-  bucket = aws_s3_bucket.ballot.id
+  bucket = aws_s3_bucket.ballot2.id
 
   policy = <<POLICY
 {
@@ -40,7 +40,7 @@ resource "aws_s3_bucket_policy" "public-by-default" {
                 "AWS": "*"
             },
             "Action": "s3:GetObject",
-            "Resource": "arn:aws:s3:::${aws_s3_bucket.ballot.id}/*"
+            "Resource": "arn:aws:s3:::${aws_s3_bucket.ballot2.id}/*"
         }
     ]
 }
