@@ -6,9 +6,12 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
+import { Paper } from '@mui/material';
+import { Grid } from '@mui/material';
 import { InjectedConnector } from '@web3-react/injected-connector'
+
+import OutlinedInput from '@mui/material/OutlinedInput';
+
 
 const injected = new InjectedConnector({
   supportedChainIds: [1, 3, 4, 5, 42],
@@ -68,10 +71,70 @@ function App() {
 
   return (
     <div className="App">
-      <ButtonAppBar active={active} connect={connect} disconnect={disconnect} account={account} />
       <header className="App-header">
-
+        <ButtonAppBar active={active} connect={connect} disconnect={disconnect} account={account} />
       </header>
+      <Box sx={{ m: 4 }} />
+      <Paper style={{width: "60vw", margin: "auto", height: "60vh", padding: 32}} elevation={6}>
+        <p>
+          <b> Enter ballot measures</b>
+        </p>
+        <Grid container justifyContent={"space-around"}>
+          <Grid item xs={12}>
+
+            <Grid container directon={"column"} disabled={true}>
+              <Grid item xs={2}>
+                Measure 1
+              </Grid>
+              <Grid item xs={10}>
+                <OutlinedInput style={{width: "80%"}} disabled={!active}/>
+              </Grid>
+
+              <Grid item xs={2}>
+                Measure 2
+              </Grid>
+              <Grid item xs={10}>
+                <OutlinedInput style={{width: "80%"}} disabled={!active}/>
+              </Grid>
+
+              <Grid item xs={2}>
+                Measure 3
+              </Grid>
+              <Grid item xs={10}>
+                <OutlinedInput style={{width: "80%"}} disabled={!active}/>
+              </Grid>
+
+              <Grid item xs={2}>
+                Measure 4
+              </Grid>
+              <Grid item xs={10}>
+                <OutlinedInput style={{width: "80%"}} disabled={!active}/>
+              </Grid>
+
+              <Grid item xs={2}>
+                Measure 5
+              </Grid>
+              <Grid item xs={10}>
+                <OutlinedInput style={{width: "80%"}} disabled={!active}/>
+              </Grid>
+
+              <Grid item xs={12}>
+               <Box m={3} />
+              </Grid>
+
+              <Grid item xs={2}>
+              </Grid>
+              <Grid item xs={8}>
+                <Button style={{width: "100%"}} variant="contained" disabled={!active}>publish to blockchain</Button>
+              </Grid>
+              <Grid item xs={2}>
+              </Grid>
+
+            </Grid>
+
+          </Grid>
+        </Grid>
+      </Paper>
     </div>
   );
 }
